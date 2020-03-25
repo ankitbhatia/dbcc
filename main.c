@@ -9,6 +9,7 @@
 #include "can.h"
 #include "parse.h"
 #include "2c.h"
+#include "2cpp.h"
 #include "2xml.h"
 #include "2csv.h"
 #include "2bsm.h"
@@ -17,6 +18,7 @@
 
 typedef enum {
 	CONVERT_TO_C,
+    CONVERT_TO_CPP,
 	CONVERT_TO_XML,
 	CONVERT_TO_CSV,
 	CONVERT_TO_BSM,
@@ -41,6 +43,7 @@ Options:\n\
 \t-g     print out the grammar used to parse the DBC files\n\
 \t-t     add timestamps to the generated files\n\
 \t-x     convert output to XML instead of the default C code\n\
+\t-c     convert output to CPP instead of the default C code\n\
 \t-C     convert output to CSV instead of the default C code\n\
 \t-b     convert output to BSM (beSTORM) instead of the default C code\n\
 \t-j     convert output to JSON instead of the default C code\n\
@@ -89,6 +92,24 @@ static int dbc2cWrapper(dbc_t *dbc, const char *dbc_file, const char *file_only,
 	FILE *c = fopen_or_die(cname, "wb");
 	FILE *h = fopen_or_die(hname, "wb");
 	const int r = dbc2c(dbc, c, h, fname, copts);
+	fclose(c);
+	fclose(h);
+	free(cname);
+	free(hname);
+	free(fname);
+	return r;
+}
+static int dbc2cppWrapper(dbc_t *dbc, const char *dbc_file, const char *file_only, dbc2c_options_t *copts)
+{
+	assert(dbc);
+	assert(dbc_file);
+	assert(file_only);
+	char *cname = replace_file_type(dbc_file,  "cpp");
+	char *hname = replace_file_type(dbc_file,  "hpp");
+	char *fname = replace_file_type(file_only, "hpp");
+	FILE *c = fopen_or_die(cname, "wb");
+	FILE *h = fopen_or_die(hname, "wb");
+	const int r = dbc2cpp(dbc, c, h, fname, copts);
 	fclose(c);
 	fclose(h);
 	free(cname);
@@ -160,7 +181,7 @@ int main(int argc, char **argv)
 	};
 	int opt = 0;
 
-	while ((opt = dbcc_getopt(argc, argv, "hvbjgxCtDpukso:")) != -1) {
+	while ((opt = dbcc_getopt(argc, argv, "hvbjgxcCtDpukso:")) != -1) {
 		switch (opt) {
 		case 'h':
 			usage(argv[0]);
@@ -180,6 +201,9 @@ int main(int argc, char **argv)
 			break;
 		case 'x':
 			convert = CONVERT_TO_XML;
+			break;
+		case 'c':
+			convert = CONVERT_TO_CPP;
 			break;
 		case 'C':
 			convert = CONVERT_TO_CSV;
@@ -250,6 +274,9 @@ int main(int argc, char **argv)
 		switch(convert) {
 		case CONVERT_TO_C:
 			r = dbc2cWrapper(dbc, outpath, dbcc_basename(argv[i]), &copts);
+			break;
+		case CONVERT_TO_CPP:
+			r = dbc2cppWrapper(dbc, outpath, dbcc_basename(argv[i]), &copts);
 			break;
 		case CONVERT_TO_XML:
 			r = dbc2xmlWrapper(dbc, outpath, copts.use_time_stamps);
