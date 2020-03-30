@@ -151,7 +151,7 @@ static const char *determine_unsigned_type(unsigned length)
 	if (length <= 16)
 		type = "uint16_t";
 	if (length <= 8)
-		type = "uint8_t";
+		type = "uint16_t";
 	return type;
 }
 
