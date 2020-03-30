@@ -566,7 +566,7 @@ int dbc2cpp(dbc_t *dbc, FILE *c, FILE *h, const char *name, dbc2c_options_t *cop
 		file_guard, 
 		file_guard,
 		copts->generate_print   ? "#include <stdio.h>"  : "");
-        fprintf(h, "class MsgCan{\n;");
+        fprintf(h, "class MsgCan{\n");
         fprintf(h, "\tpublic:\n");
         fprintf(h, "\t\tuint16_t msgID;\n");
         fprintf(h, "\t\tuint16_t msgDLC;\n");
