@@ -568,11 +568,11 @@ int dbc2cpp(dbc_t *dbc, FILE *c, FILE *h, const char *name, dbc2c_options_t *cop
 		copts->generate_print   ? "#include <stdio.h>"  : "");
         fprintf(h, "class MsgCan{\n");
         fprintf(h, "\tpublic:\n");
-        fprintf(h, "\t\tuint16_t msgID;\n");
-        fprintf(h, "\t\tuint16_t msgDLC;\n");
+        fprintf(h, "\t\tuint32_t msgID;\n");
+        fprintf(h, "\t\tuint32_t msgDLC;\n");
         fprintf(h, "\t\tuint64_t msgData;\n");
-        fprintf(h, "\t\tuint16_t getID(){return msgID;}\n");
-        fprintf(h, "\t\tuint16_t getDLC(){return msgDLC;}\n");
+        fprintf(h, "\t\tuint32_t getID(){return msgID;}\n");
+        fprintf(h, "\t\tuint32_t getDLC(){return msgDLC;}\n");
         fprintf(h, "\t\tuint64_t getData(){return msgData;}\n");
         fprintf(h, "\t\tuint32_t getDataH(){return (msgData >> 32);}\n");
         fprintf(h, "\t\tuint32_t getDataL(){return (msgData & 0xFFFFFFFF);}\n");
