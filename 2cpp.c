@@ -566,7 +566,6 @@ int dbc2cpp(dbc_t *dbc, FILE *c, FILE *h, const char *name, dbc2c_options_t *cop
 		file_guard, 
 		file_guard,
 		copts->generate_print   ? "#include <stdio.h>"  : "");
-        fprintf(h, "int decode(MsgCan raw_msg);\n\n");
         fprintf(h, "class MsgCan{\n");
         fprintf(h, "\tpublic:\n");
         fprintf(h, "\t\tuint32_t msgID;\n");
@@ -578,6 +577,7 @@ int dbc2cpp(dbc_t *dbc, FILE *c, FILE *h, const char *name, dbc2c_options_t *cop
         fprintf(h, "\t\tuint32_t getDataH(){return (msgData >> 32);}\n");
         fprintf(h, "\t\tuint32_t getDataL(){return (msgData & 0xFFFFFFFF);}\n");
         fprintf(h, "};");
+        fprintf(h, "int decode(MsgCan raw_msg);\n\n");
 
 
 	fputs("\n", h);
